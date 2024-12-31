@@ -1,0 +1,29 @@
+<div class="form-container">
+    <div class="form-section">
+        <h2>模板驱动表单</h2>
+        <form #templateForm="ngForm" (ngSubmit)="onTemplateSubmit()">
+            <div class="form-group" *ngFor="let field of dynamicFields">
+                <label [for]="field.name">{{field.label}}</label>
+                <input [type]="field.type" [id]="field.name" [name]="field.name" [(ngModel)]="templateUser[field.name]"
+                    minlength="{{field.minLength}}" pattern="{{field.pattern}}" [required]="field.required"
+                    #control="ngModel">
+                <!-- 只有在表单提交时显示错误 -->
+                <!-- <div class="error" *ngIf="control.invalid && templateForm.submitted"> -->
+                <!-- 失去焦点就校验 -->
+                <div class="error"
+                    *ngIf="control.invalid && control.touched && !control.errors?.['minlength'] && !control.errors?.['pattern']">
+                    请输入有效的{{field.label}}
+                </div>
+                <!-- 最小长度错误 -->
+                <div class="error" *ngIf="control.errors?.['minlength']">
+                    {{field.label}}最少需要{{field.minLength}}个字符
+                </div>
+                <div class="error" *ngIf="control.errors?.['pattern']">
+                    <span *ngIf="field.type === 'tel'">请输入有效的手机号码</span>
+                    <span *ngIf="field.type === 'email'">请输入有效的邮箱地址</span>
+                </div>
+            </div>
+            <button type="submit" [disabled]="!templateForm.valid">提交</button>
+        </form>
+    </div>
+</div>

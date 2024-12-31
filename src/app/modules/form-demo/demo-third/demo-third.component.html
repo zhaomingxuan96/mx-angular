@@ -1,0 +1,52 @@
+<div class="form-container">
+    <!-- 响应式表单 -->
+    <div class="form-section">
+        <h2>响应式表单验证服务封装写法</h2>
+        <form [formGroup]="reactiveForm" (ngSubmit)="onReactiveSubmit()">
+            <div class="form-group">
+                <label for="r-name">姓名</label>
+                <input type="text" id="r-name" formControlName="name">
+                <!-- 使用简化后的错误显示方式 -->
+                <div class="error" *ngIf="hasError('name')">
+                    {{ getErrorMessage('name') }}
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="r-email">邮箱</label>
+                <input type="email" id="r-email" formControlName="email">
+                <div class="error" *ngIf="hasError('email')">
+                    {{ getErrorMessage('email') }}
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="r-phone">电话</label>
+                <input type="tel" id="r-phone" formControlName="phone">
+                <div class="error" *ngIf="hasError('phone')">
+                    {{ getErrorMessage('phone') }}
+                </div>
+            </div>
+
+            <div formArrayName="skills">
+                <h3>技能列表</h3>
+                <!-- 遍历skills FormArray中的每个技能，并创建一个输入框 -->
+                <!-- skills.controls 是 FormArray 的一个属性，它包含了所有的子表单控件 -->
+                <div *ngFor="let skill of skills.controls; let i=index" class="form-group">
+                    <!-- 这是 Angular 模板语法的一般规则：当需要绑定一个表达式或变量时，使用 [],例如:[for],[id],[formControlName]
+                        当使用字符串常量时，不需要 [] -->
+                    <label [for]="'skill-'+i">技能 {{i + 1}}</label>
+                    <input [id]="'skill-'+i" type="text" [formControlName]="i">
+                    <button type="button" (click)="removeSkill(i)" *ngIf="skills.length > 1">删除</button>
+                    <!-- 显示每个技能输入框的错误信息 -->
+                    <div class="error" *ngIf="hasError(skill)">
+                        {{ getErrorMessage(skill) }}
+                    </div>
+                </div>
+                <button type="button" (click)="addSkill()">添加技能</button>
+            </div>
+
+            <button type="submit" [disabled]="!reactiveForm.valid">提交</button>
+        </form>
+    </div>
+</div>

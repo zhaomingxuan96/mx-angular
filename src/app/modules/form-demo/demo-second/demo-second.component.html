@@ -1,0 +1,63 @@
+<div class="form-container">
+    <!-- 响应式表单 -->
+    <div class="form-section">
+        <h2>响应式表单简单写法</h2>
+        <form [formGroup]="reactiveForm" (ngSubmit)="onReactiveSubmit()">
+            <div class="form-group">
+                <label for="r-name">姓名</label>
+                <input type="text" id="r-name" formControlName="name">
+                <div class="error"
+                    *ngIf="reactiveForm.get('name')?.errors?.['required'] && reactiveForm.get('name')?.touched">
+                    姓名是必填项
+                </div>
+                <div class="error"
+                    *ngIf="reactiveForm.get('name')?.errors?.['minlength'] && reactiveForm.get('name')?.touched">
+                    姓名最少需要2个字符
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="r-email">邮箱</label>
+                <input type="email" id="r-email" formControlName="email">
+                <div class="error"
+                    *ngIf="reactiveForm.get('email')?.errors?.['required'] && reactiveForm.get('email')?.touched">
+                    邮箱是必填项
+                </div>
+                <div class="error"
+                    *ngIf="reactiveForm.get('email')?.errors?.['email'] && reactiveForm.get('email')?.touched">
+                    请输入有效的邮箱地址
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="r-phone">电话</label>
+                <input type="tel" id="r-phone" formControlName="phone">
+                <div class="error"
+                    *ngIf="reactiveForm.get('phone')?.errors?.['required'] && reactiveForm.get('phone')?.touched">
+                    电话是必填项
+                </div>
+                <div class="error"
+                    *ngIf="reactiveForm.get('phone')?.errors?.['pattern'] && reactiveForm.get('phone')?.touched">
+                    请输入有效的手机号码
+                </div>
+            </div>
+
+            <div formArrayName="skills">
+                <h3>技能列表</h3>
+                <!-- 遍历skills FormArray中的每个技能，并创建一个输入框 -->
+                <!-- skills.controls 是 FormArray 的一个属性，它包含了所有的子表单控件 -->
+                <div *ngFor="let skill of skills.controls; let i=index" class="form-group">
+                    <!-- 这是 Angular 模板语法的一般规则：当需要绑定一个表达式或变量时，使用 [],例如:[for],[id],[formControlName]
+                        当使用字符串常量时，不需要 [] -->
+                    <label [for]="'skill-'+i">技能 {{i + 1}}</label>
+                    <!-- 这里绑定的是skills数组中的第i个元素 -->
+                    <input [id]="'skill-'+i" type="text" [formControlName]="i">
+                    <button type="button" (click)="removeSkill(i)" *ngIf="skills.length > 1">删除</button>
+                </div>
+                <button type="button" (click)="addSkill()">添加技能</button>
+            </div>
+
+            <button type="submit">提交</button>
+        </form>
+    </div>
+</div>
